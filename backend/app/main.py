@@ -10,6 +10,8 @@ app = FastAPI(title="Social Media Backend")
 
 origins = [
     "http://localhost:5173",
+    "https://appifylabfrontend.vercel.app",
+    "https://appifylabfrontend.vercel.app/"
 ]
 
 app.add_middleware(
