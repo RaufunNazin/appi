@@ -14,12 +14,17 @@ const Login = () => {
     setError("");
     setLoading(true);
 
-    const result = await login(email, password);
+    try {
+      const result = await login(email, password);
 
-    setLoading(false);
-
-    if (!result.success) {
-      setError(result.message);
+      if (!result.success) {
+        setError(result.message || "Invalid email or password");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -170,7 +175,8 @@ const Login = () => {
                     <div className="col-lg-12 col-md-12 col-xl-12 col-sm-12">
                       <div className="_social_login_form_btn _mar_t40 _mar_b60">
                         <button
-                          type="submit"
+                          type="button"
+                          onClick={handleSubmit}
                           className="_social_login_form_btn_link _btn1"
                           disabled={loading}
                         >

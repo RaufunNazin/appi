@@ -27,17 +27,26 @@ def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
 
 @router.post("/login", response_model=schemas.Token)
 def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    user_credentials: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db),
 ):
-    user = db.query(models.User).filter(models.User.email == form_data.username).first()
-    if not user or not auth.verify_password(form_data.password, user.password_hash):
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
-
-    access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = auth.create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+    user = (
+        db.query(models.User)
+        .filter(models.User.email == user_credentials.username)
+        .first()
     )
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials"
+        )
+
+    if not auth.verify_password(user_credentials.password, user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials"
+        )
+
+    access_token = auth.create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
 
 
