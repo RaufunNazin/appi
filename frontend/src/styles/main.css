@@ -92,10 +92,15 @@
 ._layout_middle_wrap {
     display: flex;
     flex-direction: column;
-    height: 100%;                 /* Fill remaining container height */
-    overflow-y: auto;             /* Scroll independently */
-    padding: 0 5px 20px 5px;      /* Balanced padding */
-    scrollbar-width: none;        /* Firefox: Hide scrollbar */
+    /* Calculate height: 100vh (screen) - 80px (header height) - padding */
+    height: calc(100vh - 85px); 
+    overflow-y: auto; /* This enables the scroll */
+    margin: 0;
+    padding: 10px 0;
+    
+    /* Cosmetic improvements for the scrollbar */
+    scrollbar-width: thin; 
+    scrollbar-color: #D9DEDD transparent;
 }
 
 /* Fix Right Sidebar Alignment */
@@ -142,23 +147,21 @@
     overflow: auto;
 }
 ._layout_middle_inner {
-    height: calc(100vh - 108px);
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
-    -webkit-box-flex: 1;
-    -ms-flex: 1 1;
-    flex: 1 1;
-    padding: 8px 0 0;
+    min-height: min-content; /* Allows content to grow */
 }
 ._scrool_not_sidebar_wrap {
     height: 100%;
     overflow: hidden;
     padding:10px 0 0;
+}
+._layout_left_sidebar_wrap, 
+._layout_right_sidebar_wrap {
+    height: calc(100vh - 85px); /* Fits screen minus header */
+    overflow-y: auto; /* Independent scrolling */
+    position: sticky;
+    top: 85px;
 }
 /* Hiding scrollbar */
 ._layout_middle_wrap::-webkit-scrollbar {
@@ -1934,6 +1937,9 @@
     background:#e4f1fd;
 }
 ._feed_inner_timeline_reaction_emoji_link span svg {
+    margin:0 8px 0 0;
+}
+._feed_inner_timeline_reaction_comment_link span svg {
     margin:0 8px 0 0;
 }
 ._feed_reaction_active {
@@ -5905,17 +5911,17 @@
     object-fit: contain;
 }
 ._comment_area {
-    margin: 0 0 0 20px;
+    margin: 0 0 0 10px;
     flex: 1 1;
 }
 ._comment_details {
     background: #F6F6F6;
     padding: 12px;
-    border-radius: 18px;
+    border-radius: 10px;
     width: 100%;
     max-width: fit-content;
     position: relative;
-    margin: 0 0 50px;
+    margin: 0 0 0 0;
 }
 ._comment_details_top {
     display: flex;

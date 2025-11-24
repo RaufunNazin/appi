@@ -9,7 +9,7 @@ const PostCard = ({ post }) => {
   const [showLikers, setShowLikers] = useState(false);
 
   const fetchLikers = async () => {
-    if (likers.length > 0) return;
+    if (likers.length > 0 || likes === 0) return;
     try {
       const res = await api.get(`/posts/${post.id}/likes`);
       setLikers(res.data);
@@ -20,11 +20,15 @@ const PostCard = ({ post }) => {
 
   const handleLike = async () => {
     try {
+      const newLikedState = !isLiked;
+      setLikes(newLikedState ? likes + 1 : likes - 1);
+      setIsLiked(newLikedState);
+
       await api.post(`/posts/${post.id}/like`);
-      setLikes(isLiked ? likes - 1 : likes + 1);
-      setIsLiked(!isLiked);
     } catch (err) {
-      console.error(err);
+      setLikes(isLiked ? likes + 1 : likes - 1);
+      setIsLiked(!isLiked);
+      console.error("Like failed", err);
     }
   };
 
@@ -68,7 +72,7 @@ const PostCard = ({ post }) => {
       </div>
 
       <div className="_feed_inner_timeline_total_reacts _padd_r24 _padd_l24 _mar_b26">
-        <div className="_feed_inner_timeline_total_reacts_txt">
+        <div className="_feed_inner_timeline_total_reacts_txt d-flex align-items-center">
           <div
             className="_feed_inner_timeline_total_reacts_para2"
             onMouseEnter={() => {
@@ -76,22 +80,26 @@ const PostCard = ({ post }) => {
               fetchLikers();
             }}
             onMouseLeave={() => setShowLikers(false)}
-            style={{ position: "relative", cursor: "pointer" }}
+            style={{
+              position: "relative",
+              cursor: "pointer",
+              marginRight: "15px",
+            }}
           >
-            <span>{likes}</span> Likes
-            {showLikers && likers.length > 0 && (
+            <span style={{ fontWeight: "bold" }}>{likes}</span> Likes
+            {showLikers && likes > 0 && (
               <div
                 style={{
                   position: "absolute",
-                  bottom: "100%",
+                  bottom: "120%",
                   left: 0,
                   background: "white",
                   padding: "10px",
                   border: "1px solid #ddd",
-                  borderRadius: "5px",
+                  borderRadius: "8px",
                   width: "200px",
-                  zIndex: 10,
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                  zIndex: 100,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 }}
               >
                 <h6
@@ -100,20 +108,44 @@ const PostCard = ({ post }) => {
                     margin: 0,
                     borderBottom: "1px solid #eee",
                     paddingBottom: "5px",
+                    fontWeight: "bold",
                   }}
                 >
                   Liked by:
                 </h6>
-                {likers.map((like, idx) => (
-                  <div key={idx} style={{ fontSize: "11px", marginTop: "3px" }}>
-                    {like.user.first_name} {like.user.last_name}
-                  </div>
-                ))}
+                <div style={{ maxHeight: "150px", overflowY: "auto" }}>
+                  {likers.length > 0 ? (
+                    likers.map((like, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          fontSize: "12px",
+                          marginTop: "5px",
+                          color: "#333",
+                        }}
+                      >
+                        {like.user.first_name} {like.user.last_name}
+                      </div>
+                    ))
+                  ) : (
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        color: "#999",
+                        marginTop: "5px",
+                      }}
+                    >
+                      Loading...
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
-          <p className="_feed_inner_timeline_total_reacts_para1 ms-3">
-            <span>{post.comments_count}</span> Comments
+
+          <p className="_feed_inner_timeline_total_reacts_para1 m-0">
+            <span style={{ fontWeight: "bold" }}>{post.comments_count}</span>{" "}
+            Comments
           </p>
         </div>
       </div>
@@ -124,10 +156,11 @@ const PostCard = ({ post }) => {
             isLiked ? "_feed_reaction_active" : ""
           }`}
           onClick={handleLike}
+          style={{ color: isLiked ? "#1890FF" : "inherit" }}
         >
           {isLiked ? "Unlike" : "Like"}
         </button>
-        <button className="_feed_inner_timeline_reaction_comment _feed_reaction">
+        <button className="_feed_inner_timeline_reaction_emoji _feed_reaction">
           Comment
         </button>
       </div>

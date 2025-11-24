@@ -92,9 +92,30 @@ def get_feed(
         post.likes_count = post_likes_count
         post.is_liked_by_user = is_liked
         post.comments_count = comments_count
+        post.comments = []
         results.append(post)
 
     return results
+
+
+@router.get("/{post_id}/likes", response_model=List[schemas.LikeResponse])
+def get_post_likes(
+    post_id: int,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(auth.get_current_user),
+):
+    likes = (
+        db.query(models.Like)
+        .filter(
+            models.Like.target_id == post_id,
+            models.Like.target_type == models.LikeType.post,
+        )
+        .join(models.User, models.Like.user_id == models.User.id)
+        .limit(20)
+        .all()
+    )
+
+    return likes
 
 
 @router.post("/{post_id}/like")

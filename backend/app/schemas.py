@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, validator
 from typing import Optional, List
 from datetime import datetime
 from .models import Visibility, LikeType
@@ -36,13 +36,25 @@ class CommentCreate(CommentBase):
     post_id: int
     parent_id: Optional[int] = None
 
+
+class LikeResponse(BaseModel):
+    user: UserResponse
+
+    class Config:
+        from_attributes = True
+
+
 class CommentResponse(CommentBase):
     id: int
     user: UserResponse
     created_at: datetime
     likes_count: int = 0
     is_liked_by_user: bool = False
-    replies: List["CommentResponse"] = []
+    replies: List["CommentResponse"] = Field(default_factory=list)
+
+    @validator("replies", pre=True, check_fields=False)
+    def set_replies_to_list(cls, v):
+        return v or []
 
     class Config:
         from_attributes = True

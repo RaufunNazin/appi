@@ -46,9 +46,9 @@ class Post(Base):
     )
     likes = relationship(
         "Like",
-        primaryjoin="and_(Like.target_id==Post.id, Like.target_type=='post')",
+        primaryjoin="and_(foreign(Like.target_id)==Post.id, Like.target_type=='post')",
+        overlaps="likes",
         cascade="all, delete-orphan",
-        foreign_keys="Like.target_id",
     )
 
 
@@ -68,9 +68,9 @@ class Comment(Base):
     parent = relationship("Comment", back_populates="replies", remote_side=[parent_id])
     likes = relationship(
         "Like",
-        primaryjoin="and_(Like.target_id==Comment.id, Like.target_type=='comment')",
+        primaryjoin="and_(foreign(Like.target_id)==Comment.id, Like.target_type=='comment')",
+        overlaps="likes",
         cascade="all, delete-orphan",
-        foreign_keys="Like.target_id",
     )
 
 

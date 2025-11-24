@@ -34,7 +34,33 @@ def create_comment(
     db.add(new_comment)
     db.commit()
     db.refresh(new_comment)
-    return new_comment
+
+    return {
+        "id": new_comment.id,
+        "content": new_comment.content,
+        "created_at": new_comment.created_at,
+        "user": current_user,
+        "post_id": new_comment.post_id,
+        "parent_id": new_comment.parent_id,
+        "likes_count": 0,
+        "is_liked_by_user": False,
+        "replies": [],
+    }
+
+@router.get("/{comment_id}/likes", response_model=List[schemas.LikeResponse])
+def get_comment_likes(
+    comment_id: int,
+    db: Session = Depends(database.get_db),
+):
+    likes = (
+        db.query(models.Like)
+        .filter(
+            models.Like.target_id == comment_id,
+            models.Like.target_type == models.LikeType.comment,
+        )
+        .all()
+    )
+    return likes
 
 
 @router.get("/post/{post_id}", response_model=List[schemas.CommentResponse])
@@ -43,14 +69,16 @@ def get_comments_for_post(
     current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(database.get_db),
 ):
-    comments = (
+    all_comments = (
         db.query(models.Comment)
-        .filter(models.Comment.post_id == post_id, models.Comment.parent_id == None)
+        .filter(models.Comment.post_id == post_id)
         .order_by(models.Comment.created_at.asc())
         .all()
     )
 
-    def enrich_comment(cmt):
+    comment_map = {}
+
+    for cmt in all_comments:
         likes_count = (
             db.query(models.Like)
             .filter(
@@ -70,15 +98,30 @@ def get_comments_for_post(
             is not None
         )
 
-        cmt.likes_count = likes_count
-        cmt.is_liked_by_user = is_liked
+        comment_map[cmt.id] = {
+            "id": cmt.id,
+            "content": cmt.content,
+            "created_at": cmt.created_at,
+            "user": cmt.user,
+            "post_id": cmt.post_id,
+            "parent_id": cmt.parent_id,
+            "likes_count": likes_count,
+            "is_liked_by_user": is_liked,
+            "replies": [],
+        }
 
-        if cmt.replies:
-            for reply in cmt.replies:
-                enrich_comment(reply)
-        return cmt
+    root_comments = []
 
-    return [enrich_comment(c) for c in comments]
+    for cmt in all_comments:
+        current_cmt_dict = comment_map[cmt.id]
+
+        if cmt.parent_id is None:
+            root_comments.append(current_cmt_dict)
+        else:
+            if cmt.parent_id in comment_map:
+                comment_map[cmt.parent_id]["replies"].append(current_cmt_dict)
+
+    return root_comments
 
 
 @router.post("/{comment_id}/like")
