@@ -176,6 +176,7 @@
 ._social_login_wrapper {
     min-height: 100vh;           /* Use full screen height */
     display: flex;               /* Enable flexbox */
+    min-width: 100vw;
     align-items: center;         /* Vertical Center */
     justify-content: center;     /* Horizontal Center */
     background: var(--bg1);
@@ -369,6 +370,7 @@
 ._social_registration_wrapper {
     min-height: 100vh;
     display: flex;
+    min-width: 100vw;
     align-items: center;
     justify-content: center;
     background: var(--bg1);

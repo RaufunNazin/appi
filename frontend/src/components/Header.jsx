@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
   const [showNotify, setShowNotify] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const { logout } = useAuth();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light _header_nav _padd_t10">
@@ -187,11 +189,20 @@ const Header = () => {
                   </Link>
                 </li>
                 <li className="_nav_dropdown_list_item">
-                  <Link to="/logout" className="_nav_dropdown_link">
+                  <button
+                    onClick={logout}
+                    className="_nav_dropdown_link"
+                    style={{
+                      width: "100%",
+                      textAlign: "left",
+                      border: "none",
+                      background: "transparent",
+                    }}
+                  >
                     <div className="_nav_drop_info">
                       <span>Log Out</span>
                     </div>
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </div>

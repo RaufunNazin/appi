@@ -136,6 +136,7 @@ ul {
 ._layout {
     height: 100vh;
     display: flex;
+    min-width: 100vw;
     flex-direction: column;
 }
 
