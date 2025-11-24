@@ -3278,17 +3278,29 @@
     color:var(--bg2);
 }
 ._dark_wrapper ._comment_details {
-    background: var(--bg6);
+    background-color: var(--bg6) !important; /* Dark Blue-Grey */
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border for contrast */
 }
 ._dark_wrapper ._comment_name_title {
-    color: var(--bg2);
+    color: #E4E6EB !important; /* Off-White */
 }
 ._dark_wrapper ._comment_status_text {
-    color: var(--bg2);
-    opacity: 0.5;
+    color: #B0B3B8 !important; /* Light Grey */
+    opacity: 1; /* Reset opacity to ensure readability */
 }
+._dark_wrapper ._comment_reply_list li,
 ._dark_wrapper ._comment_reply_list li span {
-    color: var(--color5);
+    color: #B0B3B8; /* Light Grey */
+}
+._dark_wrapper ._comment_reply_list li:hover,
+._dark_wrapper ._comment_reply_list li span:hover {
+    color: #E4E6EB; /* White on hover */
+    text-decoration: underline;
+}
+._dark_wrapper ._comment_reply_list li span[style*="rgb(24, 144, 255)"],
+._dark_wrapper ._comment_reply_list li span[style*="#1890FF"] {
+    color: #1890FF !important;
+    font-weight: bold;
 }
 ._dark_wrapper ._total_reactions {
     background: var(--bg5);
@@ -3298,7 +3310,7 @@
     opacity: .7;
 }
 ._dark_wrapper ._comment_reply_list li ._time_link {
-    color: var(--color7);
+    color: var(--color3);
 }
 ._dark_wrapper ._top_inner_dropdown {
     background:var(--bg6);
@@ -3432,7 +3444,12 @@
     border:2px solid var(--bg5);
 }
 ._dark_wrapper ._feed_inner_comment_box {
-    background: var(--bg6);
+    background-color: var(--bg6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+._dark_wrapper ._comment_textarea {
+    color: #E4E6EB !important;
+    caret-color: #1890FF; /* The blinking cursor color */
 }
 ._dark_wrapper ._comment_textarea::-webkit-input-placeholder {
     color: rgba(255, 255, 255, 0.36);
@@ -3447,7 +3464,8 @@
     color: rgba(255, 255, 255, 0.36);
 }
 ._dark_wrapper ._comment_textarea::placeholder {
-    color: rgba(255, 255, 255, 0.36);
+    color: #B0B3B8 !important;
+    opacity: 0.7;
 }
 ._dark_wrapper ._comment_textarea:focus {
     color: var(--bg2) !important;
@@ -3460,6 +3478,9 @@
 }
 ._dark_wrapper ._header_nav_dropdown_btn svg path {
     fill:var(--bg2);
+}
+._dark_wrapper ._feed_inner_comment_box button {
+    color: #1890FF !important;
 }
 ._dark_wrapper ._feed_reaction:hover {
     background: #123150;

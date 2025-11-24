@@ -23,7 +23,7 @@ const PostCard = ({ post }) => {
       const newLikedState = !isLiked;
       setLikes(newLikedState ? likes + 1 : likes - 1);
       setIsLiked(newLikedState);
-
+      setLikers([]);
       await api.post(`/posts/${post.id}/like`);
     } catch (err) {
       setLikes(isLiked ? likes + 1 : likes - 1);
@@ -152,15 +152,15 @@ const PostCard = ({ post }) => {
 
       <div className="_feed_inner_timeline_reaction">
         <button
-          className={`_feed_inner_timeline_reaction_emoji _feed_reaction ${
+          className={`_feed_inner_timeline_reaction_emoji _feed_reaction  _feed_inner_timeline_reaction_link ${
             isLiked ? "_feed_reaction_active" : ""
           }`}
           onClick={handleLike}
-          style={{ color: isLiked ? "#1890FF" : "inherit" }}
+          style={isLiked ? { color: "#1890FF" } : {}}
         >
-          {isLiked ? "Unlike" : "Like"}
+          {isLiked ? "Liked" : "Like"}
         </button>
-        <button className="_feed_inner_timeline_reaction_emoji _feed_reaction">
+        <button className="_feed_inner_timeline_reaction_emoji _feed_reaction _feed_inner_timeline_reaction_link">
           Comment
         </button>
       </div>

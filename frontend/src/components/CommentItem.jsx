@@ -95,8 +95,9 @@ const CommentItem = ({ comment, postId, refreshComments }) => {
                 onClick={handleLike}
                 style={{
                   cursor: "pointer",
-                  color: isLiked ? "#1890FF" : "inherit",
+                  color: isLiked && "#1890FF",
                   fontWeight: "normal",
+                  fontSize: "16px",
                 }}
               >
                 {isLiked ? "Liked" : "Like"}
