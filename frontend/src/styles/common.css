@@ -202,10 +202,11 @@ ul {
     background: var(--bg3);
     border: 1px solid var(--bg3);
     border-radius: 32px;
-    width: 424px;
+    width: 100%;              /* Change from 424px to 100% */
+    max-width: 424px;         /* Add max-width so it doesn't get too big */
     height: 40px;
     padding: 7px 47px;
-    transition:.2s all ease;
+    transition: .2s all ease;
 }
 ._inpt1:hover {
     border:1px solid var(--color5);

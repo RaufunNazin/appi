@@ -775,8 +775,12 @@
 } 
 @media only screen and (min-width:992px) and (max-width: 1199px) {
     ._custom_container {
-        max-width: 1160px;
-    }
+    max-width: 1440px; /* Restrict max width on very large screens to keep UI centered */
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 auto;
+}
     /*--- Feed Css -----*/
     ._title5 {
         font-size: 13px !important;
