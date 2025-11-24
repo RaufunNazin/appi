@@ -8,6 +8,10 @@ const PostCard = ({ post }) => {
   const [likers, setLikers] = useState([]);
   const [showLikers, setShowLikers] = useState(false);
 
+  const API_URL = import.meta.env.MODE === "development" 
+    ? "http://127.0.0.1:8000" 
+    : "https://appifybackend.onrender.com";
+
   const fetchLikers = async () => {
     if (likers.length > 0 || likes === 0) return;
     try {
@@ -63,7 +67,7 @@ const PostCard = ({ post }) => {
         {post.image_url && (
           <div className="_feed_inner_timeline_image">
             <img
-              src={`http://localhost:8000${post.image_url}`}
+              src={`${API_URL}${post.image_url}`}
               alt="Post"
               className="_time_img"
             />
